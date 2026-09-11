@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { watersheds, images as initialImages, watershedStatsData } from './data/mockData.js';
+import { watersheds, images as initialImages, watershedStatsData, activityLogs } from './data/mockData.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -8,8 +8,9 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// In-memory images store
+// In-memory stores
 let imagesList = [...initialImages];
+let logsList = [...activityLogs];
 
 // GET /api/watersheds -> returns list of watersheds
 app.get('/api/watersheds', (req, res) => {
@@ -28,28 +29,36 @@ app.get('/api/watersheds/:id/stats', (req, res) => {
   const { id } = req.params;
   const stats = watershedStatsData[id] || {
     vegetationCoverPct: 35.0,
+    prevVegetationPct: 32.0,
     waterBodyAreaHectares: 15.0,
+    prevWaterBodyArea: 14.0,
     structureCount: 10,
+    prevStructureCount: 8,
     healthScore: 70,
+    prevHealthScore: 65,
     historical: []
   };
 
-  // Dynamically count current images for this watershed
   const count = imagesList.filter(img => img.watershedId === id).length;
 
   res.json({
     vegetationCoverPct: stats.vegetationCoverPct,
+    prevVegetationPct: stats.prevVegetationPct,
     waterBodyAreaHectares: stats.waterBodyAreaHectares,
+    prevWaterBodyArea: stats.prevWaterBodyArea,
     structureCount: stats.structureCount,
+    prevStructureCount: stats.prevStructureCount,
     imageCount: count,
     healthScore: stats.healthScore,
-    historical: stats.historical
+    prevHealthScore: stats.prevHealthScore,
+    historical: stats.historical,
+    activityLogs: logsList
   });
 });
 
 // POST /api/images/upload -> accepts geo-tagged image and adds to in-memory list
 app.post('/api/images/upload', (req, res) => {
-  const { watershedId, lat, lng, category, description, date, imageUrl } = req.body;
+  const { watershedId, lat, lng, category, description, date, imageUrl, uploadedBy } = req.body;
 
   if (!watershedId || !lat || !lng || !category) {
     return res.status(400).json({ error: 'Missing required fields' });
@@ -63,12 +72,23 @@ app.post('/api/images/upload', (req, res) => {
     category: category || 'vegetation',
     description: description || 'Field survey submission',
     date: date || new Date().toISOString().split('T')[0],
-    imageUrl: imageUrl || 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&auto=format&fit=crop'
+    imageUrl: imageUrl || 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&auto=format&fit=crop',
+    uploadedBy: uploadedBy || 'Field Officer',
+    verificationStatus: 'Field Geo-Tagged'
   };
 
   imagesList.unshift(newImage);
 
-  // Optionally update structure count if category is check_dam
+  // Add to live activity feed
+  logsList.unshift({
+    id: Date.now(),
+    type: 'upload',
+    title: `New Photo Uploaded (${category.replace('_', ' ')})`,
+    desc: description.substring(0, 45) + '...',
+    time: 'Just now',
+    author: uploadedBy || 'Field Surveyor'
+  });
+
   if (category === 'check_dam' && watershedStatsData[watershedId]) {
     watershedStatsData[watershedId].structureCount += 1;
   }
@@ -76,14 +96,14 @@ app.post('/api/images/upload', (req, res) => {
   res.status(201).json(newImage);
 });
 
-// GET /api/watersheds/:id/report -> returns AI-style report object with dynamic logic
+// GET /api/watersheds/:id/report -> returns report object
 app.get('/api/watersheds/:id/report', (req, res) => {
   const { id } = req.params;
   const watershed = watersheds.find(w => w.id === id) || watersheds[0];
   const stats = watershedStatsData[id] || watershedStatsData['Coimbatore_01'];
   const historical = stats.historical || [];
 
-  const firstQ = historical[0] || { vegetationCoverPct: 35, waterBodyAreaHectares: 12 };
+  const firstQ = historical[0] || { vegetationCoverPct: 28.5, waterBodyAreaHectares: 9.2 };
   const lastQ = historical[historical.length - 1] || { vegetationCoverPct: stats.vegetationCoverPct, waterBodyAreaHectares: stats.waterBodyAreaHectares };
 
   const vegDiff = Number((lastQ.vegetationCoverPct - firstQ.vegetationCoverPct).toFixed(1));
@@ -92,58 +112,56 @@ app.get('/api/watersheds/:id/report', (req, res) => {
   const vegChangeText = vegDiff >= 0 ? `+${vegDiff}%` : `${vegDiff}%`;
   const waterChangeText = waterDiff >= 0 ? `+${waterDiff} ha` : `${waterDiff} ha`;
 
-  // Generate Narrative Report
   let narrativeReport = '';
   const recommendations = [];
 
   if (vegDiff >= 0) {
-    narrativeReport += `Over the monitoring cycle (Q3 2025 to Q3 2026), ${watershed.name} has demonstrated substantial environmental regeneration. Satellite remote sensing data indicates a ${vegChangeText} increase in overall canopy density, primarily driven by successful afforestation along slope contours and stream buffer zones. `;
+    narrativeReport += `Over the 4-year remote sensing assessment window (2023 to 2026), ${watershed.name} has demonstrated significant ecological recovery. Multispectral Sentinel-2 & ISRO Bhuvan imagery records a ${vegChangeText} net increase in canopy biomass, driven by targeted ridge-to-valley afforestation across upper slopes. `;
   } else {
-    narrativeReport += `Over the monitoring cycle, ${watershed.name} exhibited a ${vegChangeText} decline in green biomass coverage. Satellite NDVI signals indicate localized canopy stress near lower agricultural boundaries due to delayed monsoon precipitation and topsoil run-off. `;
+    narrativeReport += `Over the multi-year assessment period, ${watershed.name} registered a ${vegChangeText} decline in green biomass index. Remote sensing thermal and moisture rasters highlight localized vegetation stress due to erratic precipitation and surface runoff loss. `;
   }
 
   if (waterDiff >= 0) {
-    narrativeReport += `Surface water retention expanded by ${waterChangeText}, boosted by the strategic placement of check dams and desilted farm ponds. Ground recharge indicators show improved water table levels across surrounding community borewells. `;
+    narrativeReport += `Surface water retention area grew by ${waterChangeText}, reinforced by strategic percolation bunding and desiltation of village tanks. Ground water recharge sensors reflect a 1.8-meter rise in local aquifer levels. `;
   } else {
-    narrativeReport += `Water body surface area decreased by ${waterChangeText}, indicating silt accumulation in primary drainage channels and reduced seasonal holding capacity. `;
+    narrativeReport += `Surface water body area shrank by ${waterChangeText}, calling for urgent desiltation of primary drainage channels before the next monsoon season. `;
   }
 
-  narrativeReport += `Field verification photo logs confirm active community involvement and steady structure installation. Predictive AI spatial models forecast continued positive trajectory if soil conservation measures are sustained through the upcoming rainfall season.`;
+  narrativeReport += `Field verification logs from local officers confirm active community participation and structural maintenance. Predictive spatial models project continued positive trajectory under sustained conservation protocols.`;
 
-  // Recommendations logic based on thresholds
   if (vegDiff < 0) {
-    recommendations.push('Initiate high-density native tree plantation drives along upper catchment slopes to combat biomass loss.');
+    recommendations.push('Initiate high-density native afforestation along upper catchment slopes to reverse canopy loss.');
   } else {
-    recommendations.push('Maintain existing plantation fencing and monitor seedling survival rates during the dry quarter.');
+    recommendations.push('Maintain protective bio-fencing and conduct quarterly survival audits on young plantations.');
   }
 
   if (waterDiff < 0) {
-    recommendations.push('Schedule desiltation operations for primary village percolation tanks prior to the northeast monsoon.');
+    recommendations.push('Execute priority desiltation of major percolation ponds before the northeast monsoon.');
   } else {
-    recommendations.push('Construct secondary spillways on check dams to manage peak runoff during high-intensity rainfall events.');
+    recommendations.push('Construct emergency masonry spillways on check dams to handle peak discharge events safely.');
   }
 
   recommendations.push('Install automated telemetry water level sensors at key check dam nodes for real-time hydrological tracking.');
-  recommendations.push('Deploy community ridge-to-valley soil bunding teams in high slope gradient zones to curb topsoil runoff.');
+  recommendations.push('Deploy community ridge-to-valley contour bunding teams in high-gradient erosion sectors.');
 
   const predictedVeg = vegDiff >= 0 ? Number((stats.vegetationCoverPct + 3.4).toFixed(1)) : Number((stats.vegetationCoverPct + 1.2).toFixed(1));
 
   res.json({
     watershedId: id,
     watershedName: watershed.name,
-    period: 'Q3 2025 - Q3 2026',
+    period: '2023 - 2026 Multi-Year Assessment',
     vegetationChange: vegChangeText,
     vegIsPositive: vegDiff >= 0,
     waterBodyChange: waterChangeText,
     waterIsPositive: waterDiff >= 0,
     newCheckDams: stats.structureCount >= 10 ? 4 : 2,
-    soilErosion: vegDiff >= 0 ? 'Reduced by 18.5%' : 'Increased by 8.2%',
+    soilErosion: vegDiff >= 0 ? 'Reduced by 22.4%' : 'Increased by 9.1%',
     soilIsPositive: vegDiff >= 0,
     healthScore: stats.healthScore,
     narrativeReport,
     historical,
     prediction: {
-      nextYear: '2027 Q3 (Forecast)',
+      nextYear: '2027 (Forecast)',
       predictedVegetation: predictedVeg
     },
     recommendations

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mountain, LayoutDashboard, FileText, Calendar, MapPin } from 'lucide-react';
+import { Mountain, LayoutDashboard, FileText, Upload, Info, MapPin, Calendar } from 'lucide-react';
 
 export default function Header({
   watersheds,
@@ -8,7 +8,8 @@ export default function Header({
   currentView,
   onSwitchView,
   dateRange,
-  setDateRange
+  setDateRange,
+  onOpenUpload
 }) {
   return (
     <header className="app-header">
@@ -17,15 +18,18 @@ export default function Header({
           <Mountain size={22} />
         </div>
         <div>
-          <div className="brand-title">Watershed Monitor</div>
-          <div className="brand-subtitle">AI & Geospatial Conservation System</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <span className="brand-title">Watershed Monitor</span>
+            <span className="sih-tag">SIH Demo</span>
+          </div>
+          <div className="brand-subtitle">AI & Satellite Conservation Telemetry Platform</div>
         </div>
       </div>
 
       <div className="header-controls">
         {/* Watershed Selector */}
         <div className="control-group">
-          <MapPin size={16} className="text-muted" />
+          <MapPin size={16} className="text-primary" />
           <span className="control-label">Watershed:</span>
           <select
             className="select-input"
@@ -43,33 +47,50 @@ export default function Header({
         {/* Date Range Selector */}
         <div className="control-group">
           <Calendar size={16} className="text-muted" />
-          <span className="control-label">Range:</span>
+          <span className="control-label">Period:</span>
           <select
             className="date-input"
             value={dateRange}
             onChange={(e) => setDateRange(e.target.value)}
           >
-            <option value="1Y">Last 12 Months (2025 - 2026)</option>
+            <option value="4Y">Multi-Year (2023 - 2026)</option>
+            <option value="1Y">Last 12 Months</option>
             <option value="6M">Last 6 Months</option>
-            <option value="3M">Last 3 Months</option>
           </select>
         </div>
 
-        {/* View Switcher */}
+        {/* Multi-Page Navigation Bar */}
         <div className="view-tabs">
           <button
             className={`tab-btn ${currentView === 'dashboard' ? 'active' : ''}`}
             onClick={() => onSwitchView('dashboard')}
           >
-            <LayoutDashboard size={16} />
+            <LayoutDashboard size={15} />
             Dashboard
           </button>
+
           <button
             className={`tab-btn ${currentView === 'report' ? 'active' : ''}`}
             onClick={() => onSwitchView('report')}
           >
-            <FileText size={16} />
-            AI Report
+            <FileText size={15} />
+            AI Reports
+          </button>
+
+          <button
+            className="tab-btn"
+            onClick={onOpenUpload}
+          >
+            <Upload size={15} />
+            Upload
+          </button>
+
+          <button
+            className={`tab-btn ${currentView === 'about' ? 'active' : ''}`}
+            onClick={() => onSwitchView('about')}
+          >
+            <Info size={15} />
+            About System
           </button>
         </div>
       </div>

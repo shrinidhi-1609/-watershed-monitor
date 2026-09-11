@@ -1,26 +1,60 @@
 import React from 'react';
-import { TreePine, Droplets, Building2, Camera, Activity, TrendingUp } from 'lucide-react';
+import { TreePine, Droplets, Building2, Camera, Activity, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import CircularProgress from './CircularProgress';
+import ActivityFeed from './ActivityFeed';
 
 export default function StatCards({ stats, watershedName }) {
-  if (!stats) return <div className="sidebar">Loading statistics...</div>;
+  if (!stats) return null;
 
   const {
     vegetationCoverPct = 0,
+    prevVegetationPct = 0,
     waterBodyAreaHectares = 0,
+    prevWaterBodyArea = 0,
     structureCount = 0,
+    prevStructureCount = 0,
     imageCount = 0,
-    healthScore = 0
+    healthScore = 0,
+    prevHealthScore = 0,
+    activityLogs = []
   } = stats;
+
+  const vegDiff = Number((vegetationCoverPct - prevVegetationPct).toFixed(1));
+  const waterDiff = Number((waterBodyAreaHectares - prevWaterBodyArea).toFixed(1));
+  const structDiff = structureCount - prevStructureCount;
 
   return (
     <aside className="sidebar">
       <div className="sidebar-title">
-        <Activity size={18} className="text-muted" />
-        Watershed Telemetry & Metrics
+        <Activity size={18} className="text-primary" />
+        Watershed Telemetry & Health Index
       </div>
 
       <div className="stats-grid">
-        {/* Vegetation Card */}
+        {/* Ecosystem Health Score with Circular Ring */}
+        <div className="stat-card full-width health-ring-card">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+            <CircularProgress score={healthScore} size={90} strokeWidth={9} />
+            <div style={{ flex: 1 }}>
+              <div className="stat-label" style={{ fontSize: '0.75rem', marginBottom: '0.2rem' }}>
+                OVERALL ECOSYSTEM HEALTH INDEX
+              </div>
+              <div style={{ fontSize: '1.1rem', fontWeight: '800', color: healthScore >= 70 ? '#15803d' : '#ca8a04' }}>
+                {healthScore >= 70 ? 'Optimal Condition' : 'Moderate Stress'}
+              </div>
+              <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.3rem' }}>
+                Synced with ISRO Bhuvan & Sentinel-2 rasters
+              </div>
+
+              <div className={`trend-badge ${healthScore >= prevHealthScore ? 'trend-up' : 'trend-down'}`} style={{ marginTop: '0.5rem' }}>
+                {healthScore >= prevHealthScore ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
+                <span>{healthScore >= prevHealthScore ? `+${healthScore - prevHealthScore}` : `${healthScore - prevHealthScore}`} pts vs last quarter</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Vegetation Cover Card */}
         <div className="stat-card">
           <div className="stat-header">
             <span className="stat-label">Vegetation Cover</span>
@@ -32,9 +66,13 @@ export default function StatCards({ stats, watershedName }) {
             <span className="stat-value">{vegetationCoverPct}</span>
             <span className="stat-unit">%</span>
           </div>
+          <div className={`trend-badge ${vegDiff >= 0 ? 'trend-up' : 'trend-down'}`}>
+            {vegDiff >= 0 ? <ArrowUpRight size={13} /> : <ArrowDownRight size={13} />}
+            <span>{vegDiff >= 0 ? `+${vegDiff}%` : `${vegDiff}%`}</span>
+          </div>
         </div>
 
-        {/* Water Body Card */}
+        {/* Water Body Area Card */}
         <div className="stat-card">
           <div className="stat-header">
             <span className="stat-label">Water Body Area</span>
@@ -46,9 +84,13 @@ export default function StatCards({ stats, watershedName }) {
             <span className="stat-value">{waterBodyAreaHectares}</span>
             <span className="stat-unit">ha</span>
           </div>
+          <div className={`trend-badge ${waterDiff >= 0 ? 'trend-up' : 'trend-down'}`}>
+            {waterDiff >= 0 ? <ArrowUpRight size={13} /> : <ArrowDownRight size={13} />}
+            <span>{waterDiff >= 0 ? `+${waterDiff} ha` : `${waterDiff} ha`}</span>
+          </div>
         </div>
 
-        {/* Structure Count Card */}
+        {/* Check Dams / Bunds Card */}
         <div className="stat-card">
           <div className="stat-header">
             <span className="stat-label">Check Dams / Bunds</span>
@@ -60,9 +102,13 @@ export default function StatCards({ stats, watershedName }) {
             <span className="stat-value">{structureCount}</span>
             <span className="stat-unit">units</span>
           </div>
+          <div className="trend-badge trend-up">
+            <ArrowUpRight size={13} />
+            <span>+{structDiff} structures</span>
+          </div>
         </div>
 
-        {/* Image Count Card */}
+        {/* Field Verification Photos Card */}
         <div className="stat-card">
           <div className="stat-header">
             <span className="stat-label">Field Verification</span>
@@ -74,37 +120,14 @@ export default function StatCards({ stats, watershedName }) {
             <span className="stat-value">{imageCount}</span>
             <span className="stat-unit">photos</span>
           </div>
-        </div>
-
-        {/* Health Score Card */}
-        <div className="stat-card full-width">
-          <div className="stat-header">
-            <span className="stat-label">Overall Ecosystem Health Index</span>
-            <span className={`health-badge ${healthScore >= 70 ? 'health-good' : 'health-moderate'}`}>
-              <TrendingUp size={14} />
-              {healthScore >= 70 ? 'Optimal Growth' : 'Moderate Stress'}
-            </span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem', marginTop: '0.2rem' }}>
-            <span className="stat-value" style={{ fontSize: '1.8rem', color: healthScore >= 70 ? '#15803d' : '#ca8a04' }}>
-              {healthScore}
-            </span>
-            <span className="stat-unit" style={{ fontSize: '1rem' }}>/ 100</span>
+          <div className="trend-badge trend-neutral">
+            <span>Verified Ground Truth</span>
           </div>
         </div>
       </div>
 
-      <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '0.85rem', borderRadius: '8px', marginTop: 'auto' }}>
-        <div style={{ fontSize: '0.75rem', fontWeight: '700', color: '#475569', marginBottom: '0.2rem' }}>
-          SURVEY LOCATION
-        </div>
-        <div style={{ fontSize: '0.825rem', color: '#0f172a', fontWeight: '500' }}>
-          {watershedName || 'Coimbatore Region'}
-        </div>
-        <div style={{ fontSize: '0.725rem', color: '#64748b', marginTop: '0.3rem' }}>
-          Satellite Sentinel-2 & ISRO Bhuvan composite imagery synced.
-        </div>
-      </div>
+      {/* Activity Log Feed */}
+      <ActivityFeed logs={activityLogs} />
     </aside>
   );
 }
