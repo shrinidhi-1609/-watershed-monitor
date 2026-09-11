@@ -1,14 +1,13 @@
 export const watersheds = [
   {
     id: "Coimbatore_01",
-    name: "Coimbatore 01 (Noyyal Upper Basin - Siruvani)",
-    center: [10.99, 76.75],
+    name: "Coimbatore 01 (Ukkadam Lake Basin - ISRO Bhuvan AOI)",
+    center: [10.9863, 76.9649],
     boundary: [
-      [11.04, 76.70],
-      [11.05, 76.80],
-      [10.98, 76.83],
-      [10.93, 76.78],
-      [10.94, 76.69]
+      [10.996365, 76.967222], // North
+      [10.9841, 76.9787],     // East
+      [10.9782, 76.9685],     // South
+      [10.9868, 76.9452]      // West
     ]
   },
   {
@@ -26,87 +25,87 @@ export const watersheds = [
 ];
 
 export const images = [
-  // Watershed Coimbatore_01 (10 images across 2023 - 2026)
+  // Watershed Coimbatore_01 (10 images placed strictly within Ukkadam Lake boundary)
   {
     id: "img_101",
     watershedId: "Coimbatore_01",
-    lat: 10.995,
-    lng: 76.745,
+    lat: 10.9910,
+    lng: 76.9630,
     imageUrl: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&auto=format&fit=crop",
     category: "vegetation",
-    description: "Afforestation plot under Ridge-to-Valley treatment near Siruvani foothills.",
+    description: "Urban afforestation belt monitored along Ukkadam North feeder canal.",
     date: "2023-06-14",
     uploadedBy: "Field Officer R. Kumar",
-    verificationStatus: "Verified by ISRO Bhuvan Satellite Pass"
+    verificationStatus: "Verified Ground Truth"
   },
   {
     id: "img_102",
     watershedId: "Coimbatore_01",
-    lat: 11.010,
-    lng: 76.760,
+    lat: 10.9845,
+    lng: 76.9680,
     imageUrl: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&auto=format&fit=crop",
     category: "water_body",
-    description: "Percolation pond filled to 85% capacity following monsoon showers.",
+    description: "Ukkadam Lake main water body area (73.0 ha) verified post-monsoon.",
     date: "2023-11-20",
-    uploadedBy: "Community Surveyor S. Priya",
-    verificationStatus: "Verified Ground Truth"
+    uploadedBy: "Hydrology Analyst D. Ramesh",
+    verificationStatus: "ISRO Bhuvan L23 Class Verified"
   },
   {
     id: "img_103",
     watershedId: "Coimbatore_01",
-    lat: 10.975,
-    lng: 76.730,
+    lat: 10.9815,
+    lng: 76.9550,
     imageUrl: "https://images.unsplash.com/photo-1584467735871-8e85353a8413?w=800&auto=format&fit=crop",
     category: "check_dam",
-    description: "Newly constructed masonry check dam slowing downstream runoff velocity.",
+    description: "Inlet sluice gate structure controlling Noyyal river overflow into lake.",
     date: "2024-03-10",
     uploadedBy: "PWD Engineer V. Natarajan",
-    verificationStatus: "Verified Structure"
+    verificationStatus: "Structure Inspected"
   },
   {
     id: "img_104",
     watershedId: "Coimbatore_01",
-    lat: 10.960,
-    lng: 76.775,
+    lat: 10.9860,
+    lng: 76.9480,
     imageUrl: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=800&auto=format&fit=crop",
     category: "soil_erosion",
-    description: "Active gully erosion patch requiring immediate contour bunding.",
+    description: "Silt accumulation patch at West bund channel requiring desiltation.",
     date: "2024-08-05",
-    uploadedBy: "Forest Ranger K. Selvam",
-    verificationStatus: "High Risk Flagged"
+    uploadedBy: "Soil Conservation Officer S. Mohan",
+    verificationStatus: "Desiltation Flagged"
   },
   {
     id: "img_105",
     watershedId: "Coimbatore_01",
-    lat: 11.025,
-    lng: 76.720,
+    lat: 10.9940,
+    lng: 76.9670,
     imageUrl: "https://images.unsplash.com/photo-1511497584788-876761c139ab?w=800&auto=format&fit=crop",
     category: "vegetation",
-    description: "Dense canopy cover expansion monitored along stream corridors.",
+    description: "Miyawaki urban forest plot near Sungam bypass sector.",
     date: "2025-01-28",
     uploadedBy: "NGO Volunteer M. Arumugam",
-    verificationStatus: "NDVI Verified (+12%)"
+    verificationStatus: "Tree Canopy Healthy"
   },
   {
     id: "img_106",
     watershedId: "Coimbatore_01",
-    lat: 10.985,
-    lng: 76.790,
+    lat: 10.9830,
+    lng: 76.9720,
     imageUrl: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&auto=format&fit=crop",
     category: "water_body",
-    description: "Rejuvenated secondary stream channel showing continuous perennial flow.",
+    description: "Valankulam connection channel showing steady water flow.",
     date: "2025-07-15",
-    uploadedBy: "Hydrology Analyst D. Ramesh",
-    verificationStatus: "Flow Rate Sensor Active"
+    uploadedBy: "Water Board Lead N. Balan",
+    verificationStatus: "Verified Open Channel"
   },
   {
     id: "img_107",
     watershedId: "Coimbatore_01",
-    lat: 11.030,
-    lng: 76.755,
+    lat: 10.9890,
+    lng: 76.9580,
     imageUrl: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b3?w=800&auto=format&fit=crop",
     category: "check_dam",
-    description: "Loose boulder check dam retaining topsoil along steep gradient slope.",
+    description: "Masonry bund wall protecting southern embankment.",
     date: "2025-10-18",
     uploadedBy: "Field Officer R. Kumar",
     verificationStatus: "Verified Structure"
@@ -114,41 +113,41 @@ export const images = [
   {
     id: "img_108",
     watershedId: "Coimbatore_01",
-    lat: 10.945,
-    lng: 76.740,
+    lat: 10.9795,
+    lng: 76.9610,
     imageUrl: "https://images.unsplash.com/photo-1547683905-f686c993aae5?w=800&auto=format&fit=crop",
     category: "soil_erosion",
-    description: "Sheet erosion risk area identified via high-resolution elevation raster.",
+    description: "Unpaved slope section reinforced with stone pitching.",
     date: "2026-02-22",
-    uploadedBy: "Remote Sensing Specialist T. Deepa",
-    verificationStatus: "Remediated via Vetiver Grass"
+    uploadedBy: "PWD Engineer V. Natarajan",
+    verificationStatus: "Reinforced"
   },
   {
     id: "img_109",
     watershedId: "Coimbatore_01",
-    lat: 11.005,
-    lng: 76.715,
+    lat: 10.9875,
+    lng: 76.9740,
     imageUrl: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&auto=format&fit=crop",
     category: "vegetation",
-    description: "Horticulture pasture plantation flourishing post-treatment.",
+    description: "Lake shoreline reed plantation helping natural bio-filtration.",
     date: "2026-05-10",
     uploadedBy: "Agri Extension Officer G. Lakshmi",
-    verificationStatus: "Verified Healthy"
+    verificationStatus: "Bio-filter Active"
   },
   {
     id: "img_110",
     watershedId: "Coimbatore_01",
-    lat: 10.970,
-    lng: 76.765,
+    lat: 10.9855,
+    lng: 76.9660,
     imageUrl: "https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&auto=format&fit=crop",
     category: "water_body",
-    description: "Expanded farm pond storing 22,000 cubic meters of rainwater.",
+    description: "Perimter wetland sanctuary zone (l23 classification).",
     date: "2026-08-01",
-    uploadedBy: "Water User Association Lead N. Balan",
-    verificationStatus: "Capacity Maximum"
+    uploadedBy: "Remote Sensing Specialist T. Deepa",
+    verificationStatus: "Bhuvan L23 Match"
   },
 
-  // Watershed Coimbatore_02 (9 images across 2023 - 2026)
+  // Watershed Coimbatore_02 (8 images)
   {
     id: "img_201",
     watershedId: "Coimbatore_02",
@@ -249,48 +248,52 @@ export const images = [
 
 export const watershedStatsData = {
   Coimbatore_01: {
-    vegetationCoverPct: 42.5,
-    prevVegetationPct: 38.2,
-    waterBodyAreaHectares: 18.4,
-    prevWaterBodyArea: 16.1,
-    structureCount: 14,
-    prevStructureCount: 10,
-    healthScore: 78,
-    prevHealthScore: 68,
+    bhuvanSourced: true,
+    totalAreaSqKm: 3.72,
+    vegetationCoverPct: 5.9,       // l06 = 0.22 sq km / 3.72
+    prevVegetationPct: 5.0,        // 2023 estimated baseline (15% lower relative)
+    waterBodyAreaHectares: 73.0,   // l23 = 0.73 sq km = 73.0 ha
+    prevWaterBodyArea: 65.7,       // 2023 estimated baseline (10% lower)
+    agriLandPct: 36.0,             // (l04 + l05) = (0.47 + 0.87) = 1.34 / 3.72
+    builtUpPct: 38.4,              // (l01 + l02) = (1.41 + 0.02) = 1.43 / 3.72
+    prevBuiltUpPct: 35.3,          // 2023 estimated baseline (8% lower)
+    structureCount: 12,
+    prevStructureCount: 9,
+    healthScore: 72,
+    prevHealthScore: 62,
     historical: [
-      { quarter: "2023 Q2", year: 2023, vegetationCoverPct: 28.5, waterBodyAreaHectares: 9.2, structureCount: 4, healthScore: 54 },
-      { quarter: "2023 Q4", year: 2023, vegetationCoverPct: 31.0, waterBodyAreaHectares: 10.8, structureCount: 6, healthScore: 58 },
-      { quarter: "2024 Q2", year: 2024, vegetationCoverPct: 34.2, waterBodyAreaHectares: 12.5, structureCount: 8, healthScore: 63 },
-      { quarter: "2024 Q4", year: 2024, vegetationCoverPct: 36.8, waterBodyAreaHectares: 14.0, structureCount: 10, healthScore: 68 },
-      { quarter: "2025 Q2", year: 2025, vegetationCoverPct: 39.2, waterBodyAreaHectares: 15.8, structureCount: 12, healthScore: 72 },
-      { quarter: "2025 Q4", year: 2025, vegetationCoverPct: 41.0, waterBodyAreaHectares: 17.2, structureCount: 13, healthScore: 75 },
-      { quarter: "2026 Q2", year: 2026, vegetationCoverPct: 42.5, waterBodyAreaHectares: 18.4, structureCount: 14, healthScore: 78 }
+      { quarter: "2023 Q2", year: 2023, vegetationCoverPct: 5.0, waterBodyAreaHectares: 65.7, builtUpPct: 35.3, structureCount: 6, healthScore: 62, isBaseline: true },
+      { quarter: "2024 Q2", year: 2024, vegetationCoverPct: 5.3, waterBodyAreaHectares: 68.0, builtUpPct: 36.5, structureCount: 8, healthScore: 65, isBaseline: true },
+      { quarter: "2025 Q2", year: 2025, vegetationCoverPct: 5.6, waterBodyAreaHectares: 70.5, builtUpPct: 37.6, structureCount: 10, healthScore: 69, isBaseline: true },
+      { quarter: "2026 Q3 (Current)", year: 2026, vegetationCoverPct: 5.9, waterBodyAreaHectares: 73.0, builtUpPct: 38.4, structureCount: 12, healthScore: 72, isBaseline: false }
     ]
   },
   Coimbatore_02: {
+    bhuvanSourced: false,
+    totalAreaSqKm: 14.5,
     vegetationCoverPct: 31.2,
     prevVegetationPct: 33.5,
     waterBodyAreaHectares: 11.8,
     prevWaterBodyArea: 13.0,
+    agriLandPct: 42.0,
+    builtUpPct: 15.0,
+    prevBuiltUpPct: 14.0,
     structureCount: 8,
     prevStructureCount: 7,
     healthScore: 62,
     prevHealthScore: 66,
     historical: [
-      { quarter: "2023 Q2", year: 2023, vegetationCoverPct: 38.0, waterBodyAreaHectares: 16.0, structureCount: 3, healthScore: 70 },
-      { quarter: "2023 Q4", year: 2023, vegetationCoverPct: 36.5, waterBodyAreaHectares: 15.2, structureCount: 5, healthScore: 68 },
-      { quarter: "2024 Q2", year: 2024, vegetationCoverPct: 35.0, waterBodyAreaHectares: 14.1, structureCount: 6, healthScore: 66 },
-      { quarter: "2024 Q4", year: 2024, vegetationCoverPct: 33.5, waterBodyAreaHectares: 13.0, structureCount: 7, healthScore: 64 },
-      { quarter: "2025 Q2", year: 2025, vegetationCoverPct: 32.5, waterBodyAreaHectares: 12.4, structureCount: 7, healthScore: 63 },
-      { quarter: "2025 Q4", year: 2025, vegetationCoverPct: 31.8, waterBodyAreaHectares: 12.0, structureCount: 8, healthScore: 62 },
-      { quarter: "2026 Q2", year: 2026, vegetationCoverPct: 31.2, waterBodyAreaHectares: 11.8, structureCount: 8, healthScore: 62 }
+      { quarter: "2023 Q2", year: 2023, vegetationCoverPct: 38.0, waterBodyAreaHectares: 16.0, builtUpPct: 13.0, structureCount: 3, healthScore: 70, isBaseline: true },
+      { quarter: "2024 Q2", year: 2024, vegetationCoverPct: 35.0, waterBodyAreaHectares: 14.1, builtUpPct: 14.0, structureCount: 6, healthScore: 66, isBaseline: true },
+      { quarter: "2025 Q2", year: 2025, vegetationCoverPct: 32.5, waterBodyAreaHectares: 12.4, builtUpPct: 14.5, structureCount: 7, healthScore: 63, isBaseline: true },
+      { quarter: "2026 Q3 (Current)", year: 2026, vegetationCoverPct: 31.2, waterBodyAreaHectares: 11.8, builtUpPct: 15.0, structureCount: 8, healthScore: 62, isBaseline: false }
     ]
   }
 };
 
 export const activityLogs = [
-  { id: 1, type: "upload", title: "Field Photo Uploaded", desc: "Check Dam masonry structure verified", time: "2 hours ago", author: "Officer R. Kumar" },
-  { id: 2, type: "satellite", title: "Sentinel-2 NDVI Sync", desc: "Biomass index updated (+1.4% change detected)", time: "5 hours ago", author: "ISRO Bhuvan API" },
-  { id: 3, type: "alert", title: "Soil Erosion Risk Flagged", desc: "High slope gradient sector 4 highlighted", time: "1 day ago", author: "AI Automated Engine" },
-  { id: 4, type: "structure", title: "Structure Completed", desc: "Percolation Pond #4 desilting confirmed", time: "2 days ago", author: "PWD Field Team" }
+  { id: 1, type: "satellite", title: "ISRO Bhuvan LULC Sync", desc: "Real AOI response synced: Built-up 38.4%, Water 73ha, Agri 36.0%", time: "1 hour ago", author: "ISRO Bhuvan LULC API" },
+  { id: 2, type: "upload", title: "Field Photo Uploaded", desc: "Ukkadam Lake main water body (l23) verified", time: "3 hours ago", author: "Officer D. Ramesh" },
+  { id: 3, type: "alert", title: "Urban Runoff Monitored", desc: "Built-up area 1.43 sq km boundary verified", time: "5 hours ago", author: "AI Automated Engine" },
+  { id: 4, type: "structure", title: "Sluice Gate Inspected", desc: "Inlet channel flow control structure checked", time: "1 day ago", author: "PWD Team" }
 ];
