@@ -15,7 +15,7 @@ export default function App() {
   const [selectedWatershedId, setSelectedWatershedId] = useState('');
   const [images, setImages] = useState([]);
   const [stats, setStats] = useState(null);
-  const [currentView, setCurrentView] = useState('dashboard'); // 'dashboard' | 'report' | 'about'
+  const [currentView, setCurrentView] = useState('dashboard'); // 'dashboard' | 'compare' | 'report' | 'about'
   const [dateRange, setDateRange] = useState('4Y');
   const [isFetching, setIsFetching] = useState(true);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -110,6 +110,8 @@ export default function App() {
               <ReportView
                 watershedId={selectedWatershedId}
                 onBackToDashboard={() => setCurrentView('dashboard')}
+                images={images}
+                watershed={activeWatershed}
               />
             )}
 

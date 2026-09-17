@@ -35,8 +35,10 @@ export const images = [
     category: "vegetation",
     description: "Urban afforestation belt monitored along Ukkadam North feeder canal.",
     date: "2023-06-14",
+    capturedAt: "2023-06-14T09:42:15Z",
     uploadedBy: "Field Officer R. Kumar",
-    verificationStatus: "Verified Ground Truth"
+    verificationStatus: "Verified Ground Truth",
+    isSampleData: true
   },
   {
     id: "img_102",
@@ -47,8 +49,10 @@ export const images = [
     category: "water_body",
     description: "Ukkadam Lake main water body area (73.0 ha) verified post-monsoon.",
     date: "2023-11-20",
+    capturedAt: "2023-11-20T14:15:30Z",
     uploadedBy: "Hydrology Analyst D. Ramesh",
-    verificationStatus: "ISRO Bhuvan L23 Class Verified"
+    verificationStatus: "ISRO Bhuvan L23 Class Verified",
+    isSampleData: true
   },
   {
     id: "img_103",
@@ -59,8 +63,10 @@ export const images = [
     category: "check_dam",
     description: "Inlet sluice gate structure controlling Noyyal river overflow into lake.",
     date: "2024-03-10",
+    capturedAt: "2024-03-10T11:05:40Z",
     uploadedBy: "PWD Engineer V. Natarajan",
-    verificationStatus: "Structure Inspected"
+    verificationStatus: "Structure Inspected",
+    isSampleData: true
   },
   {
     id: "img_104",
@@ -71,8 +77,10 @@ export const images = [
     category: "soil_erosion",
     description: "Silt accumulation patch at West bund channel requiring desiltation.",
     date: "2024-08-05",
+    capturedAt: "2024-08-05T16:20:10Z",
     uploadedBy: "Soil Conservation Officer S. Mohan",
-    verificationStatus: "Desiltation Flagged"
+    verificationStatus: "Desiltation Flagged",
+    isSampleData: true
   },
   {
     id: "img_105",
@@ -83,8 +91,10 @@ export const images = [
     category: "vegetation",
     description: "Miyawaki urban forest plot near Sungam bypass sector.",
     date: "2025-01-28",
+    capturedAt: "2025-01-28T10:18:22Z",
     uploadedBy: "NGO Volunteer M. Arumugam",
-    verificationStatus: "Tree Canopy Healthy"
+    verificationStatus: "Tree Canopy Healthy",
+    isSampleData: true
   },
   {
     id: "img_106",
@@ -95,8 +105,10 @@ export const images = [
     category: "water_body",
     description: "Valankulam connection channel showing steady water flow.",
     date: "2025-07-15",
+    capturedAt: "2025-07-15T12:45:00Z",
     uploadedBy: "Water Board Lead N. Balan",
-    verificationStatus: "Verified Open Channel"
+    verificationStatus: "Verified Open Channel",
+    isSampleData: true
   },
   {
     id: "img_107",
@@ -107,8 +119,10 @@ export const images = [
     category: "check_dam",
     description: "Masonry bund wall protecting southern embankment.",
     date: "2025-10-18",
+    capturedAt: "2025-10-18T15:30:45Z",
     uploadedBy: "Field Officer R. Kumar",
-    verificationStatus: "Verified Structure"
+    verificationStatus: "Verified Structure",
+    isSampleData: true
   },
   {
     id: "img_108",
@@ -119,8 +133,10 @@ export const images = [
     category: "soil_erosion",
     description: "Unpaved slope section reinforced with stone pitching.",
     date: "2026-02-22",
+    capturedAt: "2026-02-22T08:55:12Z",
     uploadedBy: "PWD Engineer V. Natarajan",
-    verificationStatus: "Reinforced"
+    verificationStatus: "Reinforced",
+    isSampleData: true
   },
   {
     id: "img_109",
@@ -131,8 +147,10 @@ export const images = [
     category: "vegetation",
     description: "Lake shoreline reed plantation helping natural bio-filtration.",
     date: "2026-05-10",
+    capturedAt: "2026-05-10T11:12:05Z",
     uploadedBy: "Agri Extension Officer G. Lakshmi",
-    verificationStatus: "Bio-filter Active"
+    verificationStatus: "Bio-filter Active",
+    isSampleData: true
   },
   {
     id: "img_110",
@@ -143,8 +161,10 @@ export const images = [
     category: "water_body",
     description: "Perimter wetland sanctuary zone (l23 classification).",
     date: "2026-08-01",
+    capturedAt: "2026-08-01T17:05:30Z",
     uploadedBy: "Remote Sensing Specialist T. Deepa",
-    verificationStatus: "Bhuvan L23 Match"
+    verificationStatus: "Bhuvan L23 Match",
+    isSampleData: true
   },
 
   // Watershed Coimbatore_02 (8 images)
@@ -157,8 +177,10 @@ export const images = [
     category: "vegetation",
     description: "Dry deciduous scrubland earmarked for social forestry plantation.",
     date: "2023-04-11",
+    capturedAt: "2023-04-11T09:10:00Z",
     uploadedBy: "Forest Officer A. Sundaram",
-    verificationStatus: "Base Baseline Survey"
+    verificationStatus: "Base Baseline Survey",
+    isSampleData: true
   },
   {
     id: "img_202",
@@ -169,8 +191,10 @@ export const images = [
     category: "water_body",
     description: "Silted farm pond requiring desiltation before upcoming monsoon.",
     date: "2023-09-02",
+    capturedAt: "2023-09-02T13:40:15Z",
     uploadedBy: "Panchayat Exec Officer M. Kanthimathi",
-    verificationStatus: "Desiltation Scheduled"
+    verificationStatus: "Desiltation Scheduled",
+    isSampleData: true
   },
   {
     id: "img_203",
@@ -181,8 +205,10 @@ export const images = [
     category: "check_dam",
     description: "Gabion structure retaining gravel along upper watershed stream.",
     date: "2024-02-19",
+    capturedAt: "2024-02-19T10:25:50Z",
     uploadedBy: "Civil Engineer P. Manikandan",
-    verificationStatus: "Structure Completed"
+    verificationStatus: "Structure Completed",
+    isSampleData: true
   },
   {
     id: "img_204",
@@ -193,8 +219,10 @@ export const images = [
     category: "soil_erosion",
     description: "Severe rill erosion observed on degraded fallow farmland.",
     date: "2024-07-10",
+    capturedAt: "2024-07-10T15:15:30Z",
     uploadedBy: "Soil Conservation Officer S. Mohan",
-    verificationStatus: "Action Plan Created"
+    verificationStatus: "Action Plan Created",
+    isSampleData: true
   },
   {
     id: "img_205",
@@ -205,8 +233,10 @@ export const images = [
     category: "vegetation",
     description: "Agroforestry block showing modest greenness index improvement.",
     date: "2025-03-25",
+    capturedAt: "2025-03-25T11:45:00Z",
     uploadedBy: "Farmer Collective Lead R. Palanisamy",
-    verificationStatus: "Growth Monitored"
+    verificationStatus: "Growth Monitored",
+    isSampleData: true
   },
   {
     id: "img_206",
@@ -217,8 +247,10 @@ export const images = [
     category: "water_body",
     description: "Bhavani tributary overflow point monitored for seasonal discharge.",
     date: "2025-09-19",
+    capturedAt: "2025-09-19T16:00:20Z",
     uploadedBy: "Hydrology Analyst D. Ramesh",
-    verificationStatus: "Gauge Station Active"
+    verificationStatus: "Gauge Station Active",
+    isSampleData: true
   },
   {
     id: "img_207",
@@ -229,8 +261,10 @@ export const images = [
     category: "check_dam",
     description: "Earthen gully plug showing minor seepage requiring reinforcement.",
     date: "2026-01-30",
+    capturedAt: "2026-01-30T09:30:10Z",
     uploadedBy: "PWD Engineer V. Natarajan",
-    verificationStatus: "Reinforcement Approved"
+    verificationStatus: "Reinforcement Approved",
+    isSampleData: true
   },
   {
     id: "img_208",
@@ -241,8 +275,10 @@ export const images = [
     category: "soil_erosion",
     description: "Barren hillock slope with topsoil loss; candidate for vetiver grass planting.",
     date: "2026-06-05",
+    capturedAt: "2026-06-05T14:20:45Z",
     uploadedBy: "Forest Officer A. Sundaram",
-    verificationStatus: "Vetiver Planting In-Progress"
+    verificationStatus: "Vetiver Planting In-Progress",
+    isSampleData: true
   }
 ];
 

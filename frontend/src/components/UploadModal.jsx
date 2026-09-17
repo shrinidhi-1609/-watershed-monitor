@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
-import { X, Upload, MapPin, Camera, CheckCircle2, Image as ImageIcon } from 'lucide-react';
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import { X, Upload, MapPin, Camera, CheckCircle2, Image as ImageIcon, FileUp, Info } from 'lucide-react';
+import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet';
 import axios from 'axios';
+import exifr from 'exifr';
 
 function LocationPicker({ position, setPosition }) {
+  const map = useMap();
   useMapEvents({
     click(e) {
       setPosition({ lat: Number(e.latlng.lat.toFixed(5)), lng: Number(e.latlng.lng.toFixed(5)) });
     }
   });
+
+  React.useEffect(() => {
+    if (position?.lat && position?.lng) {
+      map.setView([position.lat, position.lng], map.getZoom());
+    }
+  }, [position, map]);
 
   return position ? <Marker position={[position.lat, position.lng]} /> : null;
 }
@@ -31,6 +39,9 @@ export default function UploadModal({ watershedId, defaultLat, defaultLng, onClo
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showToast, setShowToast] = useState(false);
+  const [exifStatus, setExifStatus] = useState(null); // null | { hasGps: bool, hasDate: bool }
+  const [capturedAt, setCapturedAt] = useState('');
+  const [fileName, setFileName] = useState('');
 
   const sampleImages = [
     { label: "Dense Forest Canopy", url: "https://images.unsplash.com/photo-1511497584788-876761c139ab?w=800&auto=format&fit=crop" },
@@ -42,12 +53,69 @@ export default function UploadModal({ watershedId, defaultLat, defaultLng, onClo
   const handleSelectSample = (url) => {
     setFormData({ ...formData, imageUrl: url });
     setPreviewUrl(url);
+    setExifStatus(null);
+    setFileName('');
   };
 
   const handleUrlChange = (e) => {
     const url = e.target.value;
     setFormData({ ...formData, imageUrl: url });
     setPreviewUrl(url);
+    setExifStatus(null);
+    setFileName('');
+  };
+
+  // Real EXIF extraction from uploaded image file
+  const handleFileChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setFileName(file.name);
+    setError('');
+
+    // Preview
+    const objectUrl = URL.createObjectURL(file);
+    setPreviewUrl(objectUrl);
+
+    // Read as Data URL so image persists in backend memory
+    const reader = new FileReader();
+    reader.onload = () => {
+      setFormData(prev => ({ ...prev, imageUrl: reader.result }));
+    };
+    reader.readAsDataURL(file);
+
+    try {
+      // 1. Extract GPS data
+      const gps = await exifr.gps(file);
+      // 2. Extract capture timestamp
+      const parsed = await exifr.parse(file, ['DateTimeOriginal']);
+
+      const hasGps = Boolean(gps && gps.latitude !== undefined && gps.longitude !== undefined);
+      const hasDate = Boolean(parsed && parsed.DateTimeOriginal);
+
+      if (hasGps) {
+        setCoords({
+          lat: Number(gps.latitude.toFixed(5)),
+          lng: Number(gps.longitude.toFixed(5))
+        });
+      }
+
+      if (hasDate) {
+        const d = new Date(parsed.DateTimeOriginal);
+        if (!isNaN(d.getTime())) {
+          setFormData(prev => ({
+            ...prev,
+            date: d.toISOString().split('T')[0]
+          }));
+          setCapturedAt(d.toISOString());
+        }
+      }
+
+      setExifStatus({ hasGps, hasDate });
+    } catch (err) {
+      console.warn('EXIF parse error:', err);
+      setExifStatus({ hasGps: false, hasDate: false });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -69,8 +137,10 @@ export default function UploadModal({ watershedId, defaultLat, defaultLng, onClo
         category: formData.category,
         description: formData.description,
         date: formData.date,
+        capturedAt: capturedAt || (formData.date ? `${formData.date}T${new Date().toISOString().split('T')[1]}` : new Date().toISOString()),
         imageUrl: finalImage,
-        uploadedBy: formData.uploadedBy
+        uploadedBy: formData.uploadedBy,
+        isSampleData: false
       };
 
       await axios.post('http://localhost:5000/api/images/upload', payload);
@@ -172,9 +242,82 @@ export default function UploadModal({ watershedId, defaultLat, defaultLng, onClo
                 </div>
               </div>
 
-              {/* Drag & Drop Photo Area / Sample Selector */}
+              {/* Real Photo File Upload with EXIF Extraction */}
               <div className="form-group">
-                <label className="form-label">Field Image (URL or Quick Select Preset)</label>
+                <label className="form-label">
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <FileUp size={15} className="text-primary" />
+                    <strong>Upload Real Field Photo (EXIF GPS Extraction)</strong>
+                  </span>
+                </label>
+                <div style={{
+                  border: '2px dashed #cbd5e1',
+                  borderRadius: '8px',
+                  padding: '0.85rem',
+                  textAlign: 'center',
+                  background: '#f8fafc',
+                  cursor: 'pointer'
+                }}>
+                  <input
+                    type="file"
+                    id="real-photo-file-input"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onChange={handleFileChange}
+                  />
+                  <label htmlFor="real-photo-file-input" style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.35rem' }}>
+                    <Camera size={22} style={{ color: '#15803d' }} />
+                    <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#0f172a' }}>
+                      {fileName ? `Selected: ${fileName}` : 'Choose Phone / Camera Photo File'}
+                    </span>
+                    <span style={{ fontSize: '0.725rem', color: '#64748b' }}>
+                      Auto-extracts GPS coordinates & capture timestamp from photo EXIF metadata
+                    </span>
+                  </label>
+                </div>
+
+                {/* EXIF feedback badges */}
+                {exifStatus?.hasGps && (
+                  <div style={{
+                    background: '#f0fdf4',
+                    border: '1px solid #bbf7d0',
+                    color: '#15803d',
+                    padding: '0.45rem 0.75rem',
+                    borderRadius: '6px',
+                    fontSize: '0.775rem',
+                    fontWeight: '700',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.45rem',
+                    marginTop: '0.45rem'
+                  }}>
+                    <CheckCircle2 size={15} />
+                    <span>✓ GPS & date read from photo (Pinned to Lat {coords.lat}, Lng {coords.lng})</span>
+                  </div>
+                )}
+
+                {exifStatus && !exifStatus.hasGps && (
+                  <div style={{
+                    background: '#fffbeb',
+                    border: '1px solid #fde68a',
+                    color: '#92400e',
+                    padding: '0.45rem 0.75rem',
+                    borderRadius: '6px',
+                    fontSize: '0.775rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.45rem',
+                    marginTop: '0.45rem'
+                  }}>
+                    <Info size={15} />
+                    <span>No GPS data found in this photo — please pin the location manually on the map above.</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Or Quick Select Preset / Image URL */}
+              <div className="form-group">
+                <label className="form-label">Or Use Preset Demo Image / URL</label>
                 <input
                   type="text"
                   placeholder="https://images.unsplash.com/..."

@@ -27,6 +27,7 @@ import {
   Info
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import TemporalComparisonPanel from './TemporalComparisonPanel';
 
 ChartJS.register(
   CategoryScale,
@@ -39,15 +40,35 @@ ChartJS.register(
   Legend
 );
 
-export default function ReportView({ watershedId, onBackToDashboard }) {
+export default function ReportView({
+  watershedId,
+  onBackToDashboard,
+  images: propImages,
+  watershed: propWatershed
+}) {
   const [report, setReport] = useState(null);
   const [analyzing, setAnalyzing] = useState(true);
   const [selectedLanguage, setSelectedLanguage] = useState('English');
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [watershedImages, setWatershedImages] = useState(propImages || []);
 
   useEffect(() => {
     fetchReport();
-  }, [watershedId]);
+    if (propImages && propImages.length > 0) {
+      setWatershedImages(propImages);
+    } else {
+      fetchImages();
+    }
+  }, [watershedId, propImages]);
+
+  const fetchImages = async () => {
+    try {
+      const res = await axios.get(`http://localhost:5000/api/watersheds/${watershedId}/images`);
+      setWatershedImages(res.data);
+    } catch (err) {
+      console.error('Error fetching watershed images for report:', err);
+    }
+  };
 
   const fetchReport = async () => {
     setAnalyzing(true);
@@ -337,6 +358,12 @@ export default function ReportView({ watershedId, onBackToDashboard }) {
           ))}
         </ul>
       </div>
+
+      {/* Temporal Comparison — Spatial Change Detection Section */}
+      <TemporalComparisonPanel
+        images={watershedImages}
+        watershed={propWatershed || { id: watershedId, name: report.watershedName }}
+      />
     </motion.div>
   );
 }

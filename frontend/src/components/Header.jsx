@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mountain, LayoutDashboard, FileText, Upload, Info, MapPin, Calendar } from 'lucide-react';
+import { Mountain, LayoutDashboard, FileText, Upload, Info, MapPin, Calendar, SlidersHorizontal } from 'lucide-react';
 
 export default function Header({
   watersheds,

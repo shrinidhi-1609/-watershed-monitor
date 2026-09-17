@@ -4,7 +4,7 @@ import StatCards from './StatCards';
 import TimelineSlider, { TIMELINE_STEPS } from './TimelineSlider';
 import UploadModal from './UploadModal';
 import ImageDetailDrawer from './ImageDetailDrawer';
-import { Upload, FileText, Sparkles } from 'lucide-react';
+import { Upload, FileText, Sparkles, SlidersHorizontal } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Dashboard({
@@ -12,7 +12,8 @@ export default function Dashboard({
   images,
   stats,
   onRefreshData,
-  onNavigateToReport
+  onNavigateToReport,
+  onNavigateToCompare
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);

@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, MapPin, Calendar, User, ShieldCheck, CheckCircle2, FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import GeoTagOverlay from './GeoTagOverlay';
 
 export default function ImageDetailDrawer({ image, onClose }) {
   if (!image) return null;
@@ -49,6 +50,25 @@ export default function ImageDetailDrawer({ image, onClose }) {
                 <ShieldCheck size={14} />
                 <span>{image.verificationStatus || 'Verified Field Observation'}</span>
               </div>
+              {image.isSampleData && (
+                <div style={{
+                  position: 'absolute',
+                  top: '10px',
+                  right: '10px',
+                  background: 'rgba(234, 88, 12, 0.9)',
+                  color: '#ffffff',
+                  padding: '0.25rem 0.55rem',
+                  borderRadius: '4px',
+                  fontSize: '0.675rem',
+                  fontWeight: '700',
+                  letterSpacing: '0.4px',
+                  zIndex: 15,
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
+                }}>
+                  Sample / Demo Data
+                </div>
+              )}
+              <GeoTagOverlay image={image} />
             </div>
 
             {/* Verification Details List */}

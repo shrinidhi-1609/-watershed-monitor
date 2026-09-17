@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Polygon, Marker, Popup, useMap } from 'react-leaflet';
 import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
 import L from 'leaflet';
-import { Layers, ChevronDown, ChevronUp, Eye, MapPin } from 'lucide-react';
+import { Layers, ChevronDown, ChevronUp, Eye, MapPin, Globe, Calendar } from 'lucide-react';
+import GeoTagOverlay from './GeoTagOverlay';
 
 // Helper component to center and fit bounds smoothly
 function MapRecenter({ center, boundary }) {
@@ -55,8 +56,9 @@ export default function WatershedMap({ watershed, images, onSelectImage }) {
   const defaultCenter = watershed?.center || [10.99, 76.75];
   const boundary = watershed?.boundary || [];
 
-  // Map Layer State: 'osm' or 'satellite'
+  // Map Layer State: 'osm' | 'satellite' | 'gibs-dated'
   const [mapLayer, setMapLayer] = useState('osm');
+  const [gibsDate, setGibsDate] = useState(images[0]?.date || '2024-06-15');
   const [isLegendCollapsed, setIsLegendCollapsed] = useState(false);
 
   return (
@@ -70,15 +72,30 @@ export default function WatershedMap({ watershed, images, onSelectImage }) {
         <MapRecenter center={defaultCenter} boundary={boundary} />
 
         {/* Dynamic Tile Layer Switching */}
-        {mapLayer === 'osm' ? (
+        {mapLayer === 'osm' && (
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-        ) : (
+        )}
+
+        {mapLayer === 'satellite' && (
           <TileLayer
             attribution='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
             url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+          />
+        )}
+
+        {/* NASA GIBS Real Historical Satellite Imagery by Date */}
+        {mapLayer === 'gibs-dated' && (
+          <TileLayer
+            key={`gibs-layer-${gibsDate}`}
+            attribution="NASA EOSDIS GIBS | MODIS Terra Corrected Reflectance"
+            url={`https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/${gibsDate}/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg`}
+            maxNativeZoom={9}
+            maxZoom={18}
+            tileSize={256}
+            errorTileUrl="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='256' height='256' fill='%231e293b'><rect width='256' height='256'/><text x='50%' y='50%' fill='%2394a3b8' font-size='11' text-anchor='middle' font-family='sans-serif'>No NASA Pass on this date</text></svg>"
           />
         )}
 
@@ -115,14 +132,31 @@ export default function WatershedMap({ watershed, images, onSelectImage }) {
                       e.target.src = 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&auto=format&fit=crop';
                     }}
                   />
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.3rem' }}>
-                    <span className={`popup-category category-${img.category}`}>
-                      {img.category.replace('_', ' ')}
-                    </span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.3rem', flexWrap: 'wrap', gap: '3px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <span className={`popup-category category-${img.category}`}>
+                        {img.category.replace('_', ' ')}
+                      </span>
+                      {img.isSampleData && (
+                        <span style={{
+                          background: '#fff7ed',
+                          color: '#ea580c',
+                          border: '1px solid #fed7aa',
+                          fontSize: '0.6rem',
+                          fontWeight: '700',
+                          padding: '0.05rem 0.35rem',
+                          borderRadius: '3px'
+                        }}>
+                          Sample / Demo Data
+                        </span>
+                      )}
+                    </div>
                     <span style={{ fontSize: '0.7rem', color: '#64748b' }}>{img.date}</span>
                   </div>
                   <div className="popup-desc">{img.description}</div>
                   
+                  <GeoTagOverlay image={img} size="compact" />
+
                   <button
                     className="popup-detail-btn"
                     onClick={() => onSelectImage(img)}
@@ -150,6 +184,42 @@ export default function WatershedMap({ watershed, images, onSelectImage }) {
         >
           <Layers size={14} /> Esri Satellite
         </button>
+        <button
+          className={`layer-btn ${mapLayer === 'gibs-dated' ? 'active' : ''}`}
+          onClick={() => setMapLayer('gibs-dated')}
+          title="Real NASA GIBS historical satellite imagery by exact date"
+        >
+          <Globe size={14} /> NASA GIBS
+        </button>
+
+        {mapLayer === 'gibs-dated' && (
+          <div style={{
+            marginTop: '0.35rem',
+            padding: '0.3rem 0.5rem',
+            background: '#ffffff',
+            borderRadius: '4px',
+            border: '1px solid #cbd5e1',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+          }}>
+            <Calendar size={12} style={{ color: '#0284c7' }} />
+            <span style={{ fontSize: '0.675rem', fontWeight: 600, color: '#334155' }}>Pass:</span>
+            <input
+              type="date"
+              value={gibsDate}
+              onChange={(e) => setGibsDate(e.target.value)}
+              style={{
+                border: '1px solid #94a3b8',
+                borderRadius: '3px',
+                padding: '1px 3px',
+                fontSize: '0.675rem',
+                color: '#0f172a'
+              }}
+            />
+          </div>
+        )}
       </div>
 
       {/* Collapsible Map Legend */}

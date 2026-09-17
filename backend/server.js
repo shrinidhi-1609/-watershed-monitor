@@ -79,9 +79,11 @@ app.post('/api/images/upload', (req, res) => {
     category: category || 'vegetation',
     description: description || 'Field survey submission',
     date: date || new Date().toISOString().split('T')[0],
+    capturedAt: req.body.capturedAt || (date ? `${date}T${new Date().toISOString().split('T')[1]}` : new Date().toISOString()),
     imageUrl: imageUrl || 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&auto=format&fit=crop',
     uploadedBy: uploadedBy || 'Field Officer',
-    verificationStatus: 'Field Geo-Tagged'
+    verificationStatus: 'Field Geo-Tagged',
+    isSampleData: false
   };
 
   imagesList.unshift(newImage);
